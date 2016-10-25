@@ -2,6 +2,14 @@
 <html>
 <head>
     <title>PoGoRanker</title>
+    <meta name="viewport" content="user-scalable=0, width=device-width">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="styles/style.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    <script src="scripts/data.js"></script>
+    <script src="scripts/main.js"></script>
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -13,6 +21,256 @@
     </script>
 </head>
 <body>
-  Coming soon...
+    <div class="smokescreen"></div>
+    <div id="app" ng-app="myApp" ng-controller="MainController" ng-click="select(null, $event)" loading>
+        <div id="loading-screen">
+            <div id="pokeball">
+                <div id="center">
+                </div>
+                <div class="half" id="top">
+                    </div>
+                <div class="half" id="bottom">
+                    </div>
+            </div>
+        </div>
+        <details id="popup" ng-click="$event.stopPropagation()" ng-show="selected.info">
+            {{selected.info}}
+        </details>
+        <aside>
+        </aside>
+        <main>
+            <div id="donate" ng-click="$event.stopPropagation()">
+                <div class="icon" ng-hide="donate" ng-click="donate = true">&#x1f394;</div>
+                <div class="message" ng-show="donate">
+                    Was this tool helpful for you?<br>
+                    Wanna support?<br>
+                    Buy me a drink :D!<br>
+                    <ul>
+
+                        <li><input type="radio" id="water" name="drink" value="water"><label for="water"><img src="images/fresh_water.png" alt="Fresh Water"> Fresh Water</label></li>
+                        <li><input type="radio" id="soda" name="drink" value="soda"><label for="soda"><img src="images/soda_pop.png" alt="Soda Pop"> Soda Pop</label></li>
+                        <li><input type="radio" id="lemonade" name="drink" value="lemonade"><label for="lemonade"><img src="images/lemonade.png" alt="Fresh Water"> Lemonade</label></li>
+                    </ul>
+                    
+                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                        <input type="hidden" name="cmd" value="_s-xclick">
+                        <input type="hidden" name="hosted_button_id" value="UBVS8WSKK6K9C">
+                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                        <img alt="" border="0" src="https://www.paypalobjects.com/es_XC/i/scr/pixel.gif" width="1" height="1">
+                    </form>
+                </div>
+            </div>
+            <header>
+                <div id="filters">
+                    <div class="filter" ng-show="filteredBy.length" ng-class="{disabled: !selected.filters.type}">
+                        <div class="toggle"
+                                ng-class="{selected: selected.filters.type}"
+                                ng-click="toggleFilter()"
+                                ng-attr-title="{{getFilterToggleTitle()}}">
+                            <img width="32" height="32" ng-src="images/filter.png">
+                            <div class="types selected disabled" ng-show="!selected.filters.type">
+                                <span class="type"
+                                        ng-class="{primaryType: !$index, secondaryType: $index, {{type | lowercase}}: true}"
+                                        ng-repeat="type in filteredBy">
+                                    {{type}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="types selected" ng-show="selected.filters.type">
+                            <span class="type"
+                                    ng-class="{primaryType: !$index, secondaryType: $index, {{type | lowercase}}: true}"
+                                    ng-repeat="type in filteredBy"
+                                    ng-click="toggleSingleTypeFilter(type)">
+                                {{type}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div id="sorters">
+                    <div class="sorter" ng-repeat="sorter in sorters | filter: sorterAvailabilityFilter" ng-click="reSort(sorter)" ng-class="{selected: sorter == selected.sorter}">
+                        <img width="32" height="32" ng-src="images/{{sorter.img}}">
+                    </div>
+                </div>
+                <div id="opponent">
+                    <div class="selected" ng-show="selected.opponent.pokemon">
+                        <span class="vs">VS</span>
+                        <div class="species" ng-click="removeOpponent()">
+                            <img width="48" height="48" ng-src="images/species/96x96/{{selected.opponent.pokemon.num}}.png">
+                        </div>
+                        <div class="moveset" ng-click="$event.stopPropagation()">
+                            <div class="current" ng-click="showOpponentMovesets = !showOpponentMovesets">
+                                <div>{{selected.opponent.moveset.quickMove.name}}</div>
+                                <div>{{selected.opponent.moveset.specialMove.name}}</div>
+                            </div>
+                            <div class="options" ng-show="showOpponentMovesets">
+                                <div class="moveset" 
+                                        ng-repeat="moveset in selected.opponent.pokemon.movesetsList"
+                                        ng-click="selectOpponentMoveset(moveset)">
+                                    {{moveset.quickMove.name}} / {{moveset.specialMove.name}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <aside id="pkmn-selector">
+                <div id="logo">
+                    <span>PoGoRanker</span>
+                    <go-top></go-top>
+                </div>
+                <div class="types">
+                    <div ng-repeat="(typeName, isSelected) in typeFilters"
+                        class="type" ng-class="{selected: isSelected, {{typeName | lowercase}}: true}" ng-click="toggleTypeFilter(typeName)">
+                        <div class="shade">{{typeName}}</div>
+                    </div>
+                </div>
+                <div class="type-groups" ng-show="selected.typeFilters.length">
+                    <div class="primary type-group" ng-class="{'single-type': typeGroup.types.length == 1, {{typeGroup.types[0] | lowercase}}: true}"
+                        ng-repeat="(types, typeGroup) in typeGroups"
+                        ng-show="typeGroupsFilter(typeGroup)">
+                        <div class="secondary type-group" ng-class="typeGroup.types[1] || typeGroup.types[0] | lowercase">
+                            
+                            <div class="type-grouped-pokemon">
+                                <div class="types-wrapper">
+                                    <div class="types" ng-click="selectTypes(typeGroup.types)" ng-class="{selected: areTypesSelected(typeGroup.types)}">
+                                        <span class="type" ng-class="{primaryType: !$index, secondaryType: $index, {{type | lowercase}}: true}"
+                                            ng-repeat="type in typeGroup.types">{{type}}</span>
+                                    </div>
+                                </div>
+                                <div class="opkmn" scroll-on-click ng-repeat="pkmn in typeGroup.pokemonList"
+                                    ng-class="{selected: selected.pokemon == pkmn, available: pokemon[pkmn.name].available}"
+                                    ng-click="pokemon[pkmn.name].available && selectPokemon(pkmn)">
+                                    <img class="small" width="32" height="32" ng-src="images/species/32x32/{{pkmn.num}}.png">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+            <div class="pkmn-list" ng-init="updatePokemonList()">
+                <div class="pkmn" data-name="{{pkmn.name}}"
+                    ng-class="{selected: selected.pokemon == pkmn}"
+                    ng-repeat="pkmn in pokemonList">
+                    <div class="index">{{selected.sorter == sorters[0] ? '#'+pkmn.num : $index+1+'\u00BA'}}</div>
+                    <div class="primary type" ng-class="pkmn.primaryType | lowercase">
+                        <div class="secondary type" ng-class="pkmn.secondaryType || pkmn.primaryType | lowercase">
+                            <div class="info">
+                                <div class="species">
+                                    <div class="image" ng-class="{'attacking': pkmn.isAttacking, 'defending': pkmn.isDefending}">
+                                        <div class="gym"><img width="96" src="images/gym.png"
+                                            ng-show="selected.opponent.pokemon || (pkmn.stand || selected.stand) == 'defensive'"></div>
+                                        <div class="opponent"><img width="96" height="96"
+                                            ng-src="images/species/96x96/{{pkmn.isDefending?'back/':''}}{{selected.opponent.pokemon.num}}.png"></div>
+                                        <div class="self"><img width="96" height="96"
+                                            ng-show="pkmn.isAttacking"
+                                            ng-src="images/species/96x96/back/{{pkmn.num}}.png"
+                                            ng-click="selectPokemon(pkmn)"></div>
+                                        <div class="self"><img width="96" height="96"
+                                            ng-show="!pkmn.isAttacking"
+                                            ng-src="images/species/96x96/{{pkmn.num}}.png"
+                                            ng-click="selectPokemon(pkmn)"></div>
+                                    </div>
+                                    <div class="total-power">
+                                        <div class="total">
+                                            <span class="delta" ng-attr-title="{{pkmn.totalPowerDelta>0?'+':''}}{{100*pkmn.totalPowerDelta | number : 2}}% due to type {{pkmn.totalPowerDelta>0 ? 'resistance' : 'weakness'}} against selected opponent moveset"
+                                                ng-class="pkmn.totalPowerDeltaSign"
+                                            ></span><span title="'Total Power' overall representation of their three base stats in one. {{pkmn.totalPowerDeltaSign ? '+/- resistance/weakness to selected opponent attacks' : ''}}"
+                                            >{{pkmn.totalPower | number : 1}}</span>
+                                        </div>
+                                        <div class="max">
+                                              <div class="bar"
+                                                ng-style="{width: (100 * pkmn.totalPower / maxTotalPower[pkmn.stand || selected.stand] | number : 0) + '%'}"></div>
+                                        </div>
+                                    </div>
+                                    <div class="name">{{pkmn.name}}</div>
+                                    <div class="types" ng-click="selectTypes(pkmn.types)" ng-class="{selected: areTypesSelected(pkmn.types)}">
+                                        <span class="primary type" ng-class="pkmn.primaryType | lowercase">{{pkmn.primaryType}}</span>
+                                        <span class="secondary type" ng-class="pkmn.secondaryType | lowercase" ng-if="pkmn.secondaryType">{{pkmn.secondaryType}}</span>
+                                    </div>
+                                </div>
+                                <div class="movesets">
+                                    <div class="list" ng-class="[pkmn.stand || selected.stand, pkmn.reference || selected.reference]">
+                                        <div class="moveset"
+                                                ng-repeat="moveset in pkmn.movesetsList | orderBy: selected.movesetSorter : true"
+                                                ng-class="{'best-offensive': moveset.isBestOffensive,
+                                                           'best-defensive': moveset.isBestDefensive,
+                                                           'forced': moveset.forceWeave,
+                                                           'quick-only': moveset.isBetterQuickOnly}">
+                                            <div class="quick move"
+                                                ng-class="{removed: moveset.quickMoveRemoved}"
+                                                ng-attr-title="{{moveset.quickMoveRemoved ? 'No longer available' : null}}">
+                                                <div class="type" ng-class="moveset.quickMove.type | lowercase">
+                                                    <div class="name">{{moveset.quickMove.name}}</div>
+                                                </div>
+                                            </div>
+                                            <div class="special move"
+                                                ng-class="{removed: moveset.specialMoveRemoved}"
+                                                ng-mouseenter="forceWeave(moveset, true)" ng-mouseleave="forceWeave(moveset, false)"
+                                                ng-attr-title="{{moveset.isBetterQuickOnly ? 'Better damage output by not using this move. ' : null}}{{moveset.specialMoveRemoved ? 'No longer available' : null}}">
+                                                <div class="type" ng-class="moveset.specialMove.type | lowercase">
+                                                    <div class="name">{{moveset.specialMove.name}}</div>
+                                                </div>
+                                            </div>
+                                            <div class="totals">
+                                                <div class="total dps" ng-click="selected.reference = 'by-dps'">
+                                                    <span class="delta" ng-attr-title="{{moveset.dpsDelta>0?'+':''}}{{100*moveset.dpsDelta | number : 2}}% due to opponent's type {{moveset.dpsDelta>0 ? 'weakness' : 'resistance'}} against this moveset"
+                                                        ng-class="moveset.dpsDeltaSign"
+                                                    ></span><span title="Moveset DPS. Values relative to this pokemon only">{{moveset.dps | number : 2}}</span>
+                                                </div>
+                                                <div class="max">
+                                                      <div class="bar"
+                                                      ng-attr-title="{{getBarTitle(pkmn, moveset)}}"
+                                                      ng-style="{width: (getBarPercentage(pkmn, moveset) | number : 0) + '%'}"></div>
+                                                </div>
+                                                <div class="total score"
+                                                    ng-click="selected.reference = 'by-score'">
+                                                    <span class="delta" ng-attr-title="{{moveset.scoreDelta>0?'+':''}}{{100*moveset.scoreDelta | number : 2}}%"
+                                                        ng-class="moveset.scoreDeltaSign"
+                                                    ></span><span title="Final Score. Product of moveset DPS and pokemon total power. For comparison among all species">{{moveset.score / 10 | number : 2}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="badges">
+                                                <img width="16" height="16" src="images/offense.png" class="best-offensive badge" title="Best moveset offensively {{selected.opponent.pokemon ? 'against ' + selected.opponent.pokemon.name : ''}}"
+                                                    ng-mouseenter="changeStand(pkmn,'offensive')" ng-mouseleave="changeStand(pkmn, null)">
+                                                <img width="16" height="16" src="images/defense.png" class="best-defensive badge" title="Best moveset defending a gym {{selected.opponent.pokemon ? 'from ' + selected.opponent.pokemon.name : ''}}"
+                                                    ng-mouseenter="changeStand(pkmn,'defensive')" ng-mouseleave="changeStand(pkmn, null)">
+                                                <!--<div class="best-offensive badge" title="Best moveset offensively {{selected.opponent.pokemon ? 'against ' + selected.opponent.pokemon.name : ''}}"
+                                                    ng-mouseenter="changeStand(pkmn,'offensive')" ng-mouseleave="changeStand(pkmn, null)"></div>
+                                                <div class="best-defensive badge" title="Best moveset defending a gym {{selected.opponent.pokemon ? 'from ' + selected.opponent.pokemon.name : ''}}"
+                                                    ng-mouseenter="changeStand(pkmn,'defensive')" ng-mouseleave="changeStand(pkmn, null)"></div>-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="options">
+                        <div class="option" ng-hide="pkmn == selected.opponent.pokemon" ng-click="selectAsOpponent(pkmn)">Set {{pkmn.name}}<br>as opponent</div>
+                        <div class="option" ng-show="pkmn == selected.opponent.pokemon" ng-click="removeOpponent()">Withdraw<br>opponent</div>
+                    </div>
+                </div>
+            </div>
+            <aside id="selected-item">
+                <div class="selected-opponent" ng-show="selected.opponent.pokemon">
+                    VS
+                    <img class="big" width="96" height="96" ng-src="images/species/96x96/{{selected.opponent.pokemon.num}}.png">
+                    <div>{{selected.opponent.moveset.quickMove.name}} / {{selected.opponent.moveset.specialMove.name}}</div>
+                    <button ng-click="removeOpponent()">Remove Opponent</button>
+                </div>
+                <div class="selected-pkmn" ng-show="selected.pokemon">
+                    <img class="big" width="96" height="96" ng-src="images/species/96x96/{{selected.pokemon.num}}.png">
+                    <button ng-show="selected.pokemon" ng-click="selectAsOpponent(selected.pokemon)">Select as Opponent</button>
+                </div>
+            </aside>
+            <!-- <iframe width="1036" height="539" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/1Nuuy8ET9JPbjbzNXaX8urwMNf7dCxLVXKp3SgWXqtko/pubchart?oid=569932195&amp;format=interactive"></iframe> -->
+        </main>
+        <aside>
+        </aside>
+         <!--<div id="go-top" ng-click="scrollToTop()">
+            <img width="48" height="48" ng-src="images/top.png">
+        </div> -->
+          
+    </div>
 </body>
 </html>

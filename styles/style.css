@@ -1,0 +1,430 @@
+html { height: 100%; }
+
+body { background: url("../images/background-ditto.png"); background-size: 550px 500px; margin: 0; padding: 0; display: flex; min-height: 100%; overflow-x: hidden; }
+body .smokescreen { position: fixed; top: 0; bottom: 0; right: 0; left: 0; background: rgba(0, 0, 0, 0.93); z-index: -10; }
+body .header-back { position: fixed; top: 0; left: 0; background: black; z-index: 4; box-shadow: 0 5px 10px black; }
+
+@keyframes spin { 0% { transform: rotate(0deg); }
+  50% { transform: rotate(180deg); }
+  100% { transform: rotate(360deg); } }
+#test { filter: invert(100%); }
+
+#loading-screen { display: flex; justify-content: center; align-items: center; position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 10; background-color: black; opacity: 0; visibility: hidden; transition: visibility 1s, opacity 1s linear; }
+#loading-screen #pokeball { position: relative; height: 250px; width: 250px; border-radius: 50%; border: 25px solid rgba(255, 255, 255, 0.5); animation-name: spin; animation-duration: 1.5s; animation-timing-function: ease-in-out; animation-iteration-count: infinite; }
+#loading-screen #pokeball * { box-sizing: border-box; position: absolute; }
+#loading-screen #pokeball #center { height: 20%; width: 20%; margin: 40%; background-color: white; border-radius: 50%; }
+#loading-screen #pokeball .half { height: 80%; width: 80%; margin: 10%; border-radius: 50%; border: 50px solid; }
+#loading-screen #pokeball #top { border-color: rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0.5) transparent transparent; transform: rotate(-45deg); -webkit-clip-path: polygon(10% 0, 100% 0, 100% 90%); clip-path: polygon(10% 0, 100% 0, 100% 90%); }
+#loading-screen #pokeball #bottom { border-color: transparent white white transparent; transform: rotate(45deg); -webkit-clip-path: polygon(100% 10%, 100% 100%, 10% 100%); clip-path: polygon(100% 10%, 100% 100%, 10% 100%); }
+
+#donate { position: fixed; top: 0.3em; right: 0.7em; z-index: 7; }
+#donate .icon { font-size: 1.5em; }
+#donate .message { background: black; padding: 1em; border: 3px solid #262626; border-radius: 1em; }
+#donate .message ul { list-style: none; }
+#donate .message ul li * { vertical-align: middle; }
+#donate .message form { text-align: center; }
+
+.go-top { cursor: pointer; }
+.go-top:after { content: '\2912'; content: '\2b89'; content: '\21f1'; padding: 0 0.5em; }
+
+#app { margin: 0; padding: 0 1em 1em; color: white; font-family: Consolas, "Lucida Console", monospace; font-size: 13px; cursor: default; flex-grow: 1; display: flex; flex-flow: row wrap; justify-content: space-between; }
+#app[loading] #loading-screen { visibility: visible; opacity: 1; transition: visibility 0s, opacity 1s linear; }
+#app[loading] > * { visibility: hidden; transition: visibility 1s; }
+#app main { display: flex; flex-flow: column nowrap; position: relative; margin: 0 16em; min-width: 670px; }
+#app main header { display: flex; justify-content: space-between; align-items: flex-end; padding: 0.5em 1em 0; box-sizing: border-box; position: fixed; width: 690px; z-index: 5; background: black; box-shadow: 0 0px 10px 5px black; }
+#app main header > div { flex-basis: 0; flex-grow: 1; }
+
+#logo { display: flex; align-items: center; margin: 0 0 0 0.5em; font-size: 2em; height: 2em; }
+
+#popup { position: fixed; z-index: 2; top: 1em; right: 1em; background: gray; border: 5px solid lightgray; box-shadow: -2px 2px 5px 2px black; max-width: 90%; overflow: hidden; }
+
+#donate .icon, .go-top, #filters .filter .toggle, #sorters .sorter, #opponent .selected .moveset .options .moveset { cursor: pointer; opacity: 0.6; }
+#donate .icon + .sorter, .go-top + .sorter, #filters .filter .toggle + .sorter, #sorters .sorter + .sorter, #opponent .selected .moveset .options .moveset + .sorter { margin-left: 1em; }
+#donate .icon:hover, .go-top:hover, #filters .filter .toggle:hover, #sorters .sorter:hover, #opponent .selected .moveset .options .moveset:hover { opacity: 0.8; }
+#donate .selected.icon, .selected.go-top, #filters .filter .selected.toggle, #sorters .selected.sorter, #opponent .selected .moveset .options .selected.moveset { opacity: 0.9; }
+#donate .icon:hover.selected, .go-top:hover.selected, #filters .filter .toggle:hover.selected, #sorters .sorter:hover.selected, #opponent .selected .moveset .options .moveset:hover.selected { opacity: 1; }
+#donate .icon img, .go-top img, #filters .filter .toggle img, #sorters .sorter img, #opponent .selected .moveset .options .moveset img { filter: invert(100%) !important; -webkit-filter: invert(100%) !important; }
+
+#filters .filter .types, #pkmn-selector .type-groups > .type-group .types, .pkmn .info .species .types { display: flex; background: rgba(0, 0, 0, 0.4); border: 1px solid transparent; border-radius: 0.4em; overflow: hidden; }
+#filters .filter .types .type, #pkmn-selector .type-groups > .type-group .types .type, .pkmn .info .species .types .type { padding: 0em 0.3em; display: inline-block; text-transform: uppercase; box-sizing: border-box; text-align: center; }
+#filters .filter .types .type.normal, #pkmn-selector .type-groups > .type-group .types .type.normal, .pkmn .info .species .types .type.normal { background: rgba(167, 167, 118, 0.7); }
+#filters .filter .types .type.fire, #pkmn-selector .type-groups > .type-group .types .type.fire, .pkmn .info .species .types .type.fire { background: rgba(239, 127, 46, 0.7); }
+#filters .filter .types .type.fighting, #pkmn-selector .type-groups > .type-group .types .type.fighting, .pkmn .info .species .types .type.fighting { background: rgba(190, 47, 39, 0.7); }
+#filters .filter .types .type.water, #pkmn-selector .type-groups > .type-group .types .type.water, .pkmn .info .species .types .type.water { background: rgba(102, 143, 240, 0.7); }
+#filters .filter .types .type.flying, #pkmn-selector .type-groups > .type-group .types .type.flying, .pkmn .info .species .types .type.flying { background: rgba(167, 143, 240, 0.7); }
+#filters .filter .types .type.grass, #pkmn-selector .type-groups > .type-group .types .type.grass, .pkmn .info .species .types .type.grass { background: rgba(120, 200, 81, 0.7); }
+#filters .filter .types .type.poison, #pkmn-selector .type-groups > .type-group .types .type.poison, .pkmn .info .species .types .type.poison { background: rgba(160, 64, 160, 0.7); }
+#filters .filter .types .type.electric, #pkmn-selector .type-groups > .type-group .types .type.electric, .pkmn .info .species .types .type.electric { background: rgba(248, 208, 48, 0.7); }
+#filters .filter .types .type.ground, #pkmn-selector .type-groups > .type-group .types .type.ground, .pkmn .info .species .types .type.ground { background: rgba(224, 191, 103, 0.7); }
+#filters .filter .types .type.psychic, #pkmn-selector .type-groups > .type-group .types .type.psychic, .pkmn .info .species .types .type.psychic { background: rgba(248, 89, 136, 0.7); }
+#filters .filter .types .type.rock, #pkmn-selector .type-groups > .type-group .types .type.rock, .pkmn .info .species .types .type.rock { background: rgba(183, 160, 56, 0.7); }
+#filters .filter .types .type.ice, #pkmn-selector .type-groups > .type-group .types .type.ice, .pkmn .info .species .types .type.ice { background: rgba(151, 216, 216, 0.7); }
+#filters .filter .types .type.bug, #pkmn-selector .type-groups > .type-group .types .type.bug, .pkmn .info .species .types .type.bug { background: rgba(167, 182, 32, 0.7); }
+#filters .filter .types .type.dragon, #pkmn-selector .type-groups > .type-group .types .type.dragon, .pkmn .info .species .types .type.dragon { background: rgba(112, 58, 248, 0.7); }
+#filters .filter .types .type.ghost, #pkmn-selector .type-groups > .type-group .types .type.ghost, .pkmn .info .species .types .type.ghost { background: rgba(112, 87, 152, 0.7); }
+#filters .filter .types .type.dark, #pkmn-selector .type-groups > .type-group .types .type.dark, .pkmn .info .species .types .type.dark { background: rgba(112, 88, 72, 0.7); }
+#filters .filter .types .type.steel, #pkmn-selector .type-groups > .type-group .types .type.steel, .pkmn .info .species .types .type.steel { background: rgba(185, 185, 208, 0.7); }
+#filters .filter .types .type.fairy, #pkmn-selector .type-groups > .type-group .types .type.fairy, .pkmn .info .species .types .type.fairy { background: rgba(238, 155, 173, 0.7); }
+#filters .filter .types:hover, #pkmn-selector .type-groups > .type-group .types:hover, .pkmn .info .species .types:hover, #filters .filter .selected.types, #pkmn-selector .type-groups > .type-group .selected.types, .pkmn .info .species .selected.types { cursor: pointer; background: rgba(0, 0, 0, 0.5); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5); }
+#filters .filter .types:hover .type, #pkmn-selector .type-groups > .type-group .types:hover .type, .pkmn .info .species .types:hover .type, #filters .filter .selected.types .type, #pkmn-selector .type-groups > .type-group .selected.types .type, .pkmn .info .species .selected.types .type { border: 0; border-radius: 0; }
+#filters .filter .types:hover .type.normal, #pkmn-selector .type-groups > .type-group .types:hover .type.normal, .pkmn .info .species .types:hover .type.normal, #filters .filter .selected.types .type.normal, #pkmn-selector .type-groups > .type-group .selected.types .type.normal, .pkmn .info .species .selected.types .type.normal { background: rgba(167, 167, 118, 0.9); }
+#filters .filter .types:hover .type.fire, #pkmn-selector .type-groups > .type-group .types:hover .type.fire, .pkmn .info .species .types:hover .type.fire, #filters .filter .selected.types .type.fire, #pkmn-selector .type-groups > .type-group .selected.types .type.fire, .pkmn .info .species .selected.types .type.fire { background: rgba(239, 127, 46, 0.9); }
+#filters .filter .types:hover .type.fighting, #pkmn-selector .type-groups > .type-group .types:hover .type.fighting, .pkmn .info .species .types:hover .type.fighting, #filters .filter .selected.types .type.fighting, #pkmn-selector .type-groups > .type-group .selected.types .type.fighting, .pkmn .info .species .selected.types .type.fighting { background: rgba(190, 47, 39, 0.9); }
+#filters .filter .types:hover .type.water, #pkmn-selector .type-groups > .type-group .types:hover .type.water, .pkmn .info .species .types:hover .type.water, #filters .filter .selected.types .type.water, #pkmn-selector .type-groups > .type-group .selected.types .type.water, .pkmn .info .species .selected.types .type.water { background: rgba(102, 143, 240, 0.9); }
+#filters .filter .types:hover .type.flying, #pkmn-selector .type-groups > .type-group .types:hover .type.flying, .pkmn .info .species .types:hover .type.flying, #filters .filter .selected.types .type.flying, #pkmn-selector .type-groups > .type-group .selected.types .type.flying, .pkmn .info .species .selected.types .type.flying { background: rgba(167, 143, 240, 0.9); }
+#filters .filter .types:hover .type.grass, #pkmn-selector .type-groups > .type-group .types:hover .type.grass, .pkmn .info .species .types:hover .type.grass, #filters .filter .selected.types .type.grass, #pkmn-selector .type-groups > .type-group .selected.types .type.grass, .pkmn .info .species .selected.types .type.grass { background: rgba(120, 200, 81, 0.9); }
+#filters .filter .types:hover .type.poison, #pkmn-selector .type-groups > .type-group .types:hover .type.poison, .pkmn .info .species .types:hover .type.poison, #filters .filter .selected.types .type.poison, #pkmn-selector .type-groups > .type-group .selected.types .type.poison, .pkmn .info .species .selected.types .type.poison { background: rgba(160, 64, 160, 0.9); }
+#filters .filter .types:hover .type.electric, #pkmn-selector .type-groups > .type-group .types:hover .type.electric, .pkmn .info .species .types:hover .type.electric, #filters .filter .selected.types .type.electric, #pkmn-selector .type-groups > .type-group .selected.types .type.electric, .pkmn .info .species .selected.types .type.electric { background: rgba(248, 208, 48, 0.9); }
+#filters .filter .types:hover .type.ground, #pkmn-selector .type-groups > .type-group .types:hover .type.ground, .pkmn .info .species .types:hover .type.ground, #filters .filter .selected.types .type.ground, #pkmn-selector .type-groups > .type-group .selected.types .type.ground, .pkmn .info .species .selected.types .type.ground { background: rgba(224, 191, 103, 0.9); }
+#filters .filter .types:hover .type.psychic, #pkmn-selector .type-groups > .type-group .types:hover .type.psychic, .pkmn .info .species .types:hover .type.psychic, #filters .filter .selected.types .type.psychic, #pkmn-selector .type-groups > .type-group .selected.types .type.psychic, .pkmn .info .species .selected.types .type.psychic { background: rgba(248, 89, 136, 0.9); }
+#filters .filter .types:hover .type.rock, #pkmn-selector .type-groups > .type-group .types:hover .type.rock, .pkmn .info .species .types:hover .type.rock, #filters .filter .selected.types .type.rock, #pkmn-selector .type-groups > .type-group .selected.types .type.rock, .pkmn .info .species .selected.types .type.rock { background: rgba(183, 160, 56, 0.9); }
+#filters .filter .types:hover .type.ice, #pkmn-selector .type-groups > .type-group .types:hover .type.ice, .pkmn .info .species .types:hover .type.ice, #filters .filter .selected.types .type.ice, #pkmn-selector .type-groups > .type-group .selected.types .type.ice, .pkmn .info .species .selected.types .type.ice { background: rgba(151, 216, 216, 0.9); }
+#filters .filter .types:hover .type.bug, #pkmn-selector .type-groups > .type-group .types:hover .type.bug, .pkmn .info .species .types:hover .type.bug, #filters .filter .selected.types .type.bug, #pkmn-selector .type-groups > .type-group .selected.types .type.bug, .pkmn .info .species .selected.types .type.bug { background: rgba(167, 182, 32, 0.9); }
+#filters .filter .types:hover .type.dragon, #pkmn-selector .type-groups > .type-group .types:hover .type.dragon, .pkmn .info .species .types:hover .type.dragon, #filters .filter .selected.types .type.dragon, #pkmn-selector .type-groups > .type-group .selected.types .type.dragon, .pkmn .info .species .selected.types .type.dragon { background: rgba(112, 58, 248, 0.9); }
+#filters .filter .types:hover .type.ghost, #pkmn-selector .type-groups > .type-group .types:hover .type.ghost, .pkmn .info .species .types:hover .type.ghost, #filters .filter .selected.types .type.ghost, #pkmn-selector .type-groups > .type-group .selected.types .type.ghost, .pkmn .info .species .selected.types .type.ghost { background: rgba(112, 87, 152, 0.9); }
+#filters .filter .types:hover .type.dark, #pkmn-selector .type-groups > .type-group .types:hover .type.dark, .pkmn .info .species .types:hover .type.dark, #filters .filter .selected.types .type.dark, #pkmn-selector .type-groups > .type-group .selected.types .type.dark, .pkmn .info .species .selected.types .type.dark { background: rgba(112, 88, 72, 0.9); }
+#filters .filter .types:hover .type.steel, #pkmn-selector .type-groups > .type-group .types:hover .type.steel, .pkmn .info .species .types:hover .type.steel, #filters .filter .selected.types .type.steel, #pkmn-selector .type-groups > .type-group .selected.types .type.steel, .pkmn .info .species .selected.types .type.steel { background: rgba(185, 185, 208, 0.9); }
+#filters .filter .types:hover .type.fairy, #pkmn-selector .type-groups > .type-group .types:hover .type.fairy, .pkmn .info .species .types:hover .type.fairy, #filters .filter .selected.types .type.fairy, #pkmn-selector .type-groups > .type-group .selected.types .type.fairy, .pkmn .info .species .selected.types .type.fairy { background: rgba(238, 155, 173, 0.9); }
+#filters .filter .selected.types:hover, #pkmn-selector .type-groups > .type-group .selected.types:hover, .pkmn .info .species .selected.types:hover { background: rgba(0, 0, 0, 0.3); }
+
+.delta { flex-grow: 1; }
+.delta.positive:before { content: '\2191'; color: #b3ffb3; }
+.delta.negative:before { content: '\2193'; color: #ffb3b3; }
+
+#filters { display: flex; margin-bottom: 3px; }
+#filters .filter { display: flex; justify-content: flex-start; align-items: flex-end; }
+#filters .filter .toggle { display: flex; justify-content: flex-start; align-items: flex-end; }
+#filters .filter .types { background: #444444 !important; }
+#filters .filter .types:not(.disabled) { cursor: default !important; }
+#filters .filter .types:not(.disabled) .all, #filters .filter .types:not(.disabled) .only { cursor: pointer; }
+#filters .filter .types:not(.disabled) .all:hover, #filters .filter .types:not(.disabled) .only:hover { background-color: rgba(255, 255, 255, 0.2); }
+#filters .filter .types.disabled { cursor: pointer !important; }
+
+#sorters { display: flex; justify-content: center; }
+
+#opponent .selected { display: flex; justify-content: flex-end; align-items: center; }
+#opponent .selected .vs { font-size: 2em; line-height: 0.8em; font-weight: bold; }
+#opponent .selected .species { position: relative; }
+#opponent .selected .species img { margin: -10px 4px; }
+#opponent .selected .species:hover { cursor: pointer; }
+#opponent .selected .species:hover img { opacity: 0.2; }
+#opponent .selected .species:hover:after { content: "X"; width: 48px; height: 48px; margin: -10px 4px; display: flex; justify-content: center; align-items: center; z-index: 1; position: absolute; left: 0; top: 0; }
+#opponent .selected .moveset { white-space: nowrap; position: relative; }
+#opponent .selected .moveset .current:hover { cursor: pointer; }
+#opponent .selected .moveset .current:hover div { opacity: 0.2; }
+#opponent .selected .moveset .current:hover:after { content: "Change"; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 1; position: absolute; left: 0; top: 0; }
+#opponent .selected .moveset .options { position: absolute; z-index: 1; top: 120%; left: -50%; background: black; padding: 1em; border: 3px solid #262626; border-radius: 1em; box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.5); }
+
+#selected-item { display: flex; display: none; flex-flow: column nowrap; justify-content: center; position: absolute; box-sizing: border-box; width: 16em; margin-top: 5em; margin-left: 16em; align-self: flex-end; border-radius: 1em; min-height: 20em; }
+#selected-item .selected-pkmn { display: flex; justify-content: center; }
+
+#pkmn-selector { display: flex; flex-flow: column nowrap; position: absolute; box-sizing: border-box; width: 16em; margin-left: -16em; position: fixed; z-index: 5; }
+#pkmn-selector > .types { display: flex; flex-flow: column wrap; align-content: center; font-size: 1.3em; height: 16em; }
+#pkmn-selector > .types .type { border: 2px solid rgba(0, 0, 0, 0.7); border-radius: 0.4em; box-sizing: border-box; overflow: hidden; text-align: center; text-transform: uppercase; margin: 1px; }
+#pkmn-selector > .types .type.normal { background: #a7a776; }
+#pkmn-selector > .types .type.fire { background: #ef7f2e; }
+#pkmn-selector > .types .type.fighting { background: #be2f27; }
+#pkmn-selector > .types .type.water { background: #668ff0; }
+#pkmn-selector > .types .type.flying { background: #a78ff0; }
+#pkmn-selector > .types .type.grass { background: #78c851; }
+#pkmn-selector > .types .type.poison { background: #a040a0; }
+#pkmn-selector > .types .type.electric { background: #f8d030; }
+#pkmn-selector > .types .type.ground { background: #e0bf67; }
+#pkmn-selector > .types .type.psychic { background: #f85988; }
+#pkmn-selector > .types .type.rock { background: #b7a038; }
+#pkmn-selector > .types .type.ice { background: #97d8d8; }
+#pkmn-selector > .types .type.bug { background: #a7b620; }
+#pkmn-selector > .types .type.dragon { background: #703af8; }
+#pkmn-selector > .types .type.ghost { background: #705798; }
+#pkmn-selector > .types .type.dark { background: #705848; }
+#pkmn-selector > .types .type.steel { background: #b9b9d0; }
+#pkmn-selector > .types .type.fairy { background: #ee9bad; }
+#pkmn-selector > .types .type .shade { padding: 0.1em 0.5em; background: rgba(0, 0, 0, 0.5); color: rgba(204, 204, 204, 0.8); }
+#pkmn-selector > .types .type:hover { cursor: pointer; border-color: rgba(0, 0, 0, 0.5); }
+#pkmn-selector > .types .type:hover .shade { background: rgba(0, 0, 0, 0.3); color: rgba(255, 255, 255, 0.9); }
+#pkmn-selector > .types .type.selected { border-color: rgba(255, 255, 255, 0.6); }
+#pkmn-selector > .types .type.selected .shade { background: rgba(0, 0, 0, 0.1); color: white; }
+#pkmn-selector > .types .type.selected:hover { border-color: rgba(0, 0, 0, 0.3); }
+#pkmn-selector > .types .type.selected:hover .shade { background: rgba(0, 0, 0, 0.1); color: rgba(255, 255, 255, 0.9); }
+#pkmn-selector .type-groups { display: flex; flex-flow: column nowrap; border: 3px solid #262626; border-radius: 1.5em; overflow: hidden; margin: 0 0.6em; }
+#pkmn-selector .type-groups > .primary.type-group { display: flex; }
+#pkmn-selector .type-groups > .primary.type-group.normal { background: linear-gradient(to right, rgba(167, 167, 118, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group.fire { background: linear-gradient(to right, rgba(239, 127, 46, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group.fighting { background: linear-gradient(to right, rgba(190, 47, 39, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group.water { background: linear-gradient(to right, rgba(102, 143, 240, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group.flying { background: linear-gradient(to right, rgba(167, 143, 240, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group.grass { background: linear-gradient(to right, rgba(120, 200, 81, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group.poison { background: linear-gradient(to right, rgba(160, 64, 160, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group.electric { background: linear-gradient(to right, rgba(248, 208, 48, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group.ground { background: linear-gradient(to right, rgba(224, 191, 103, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group.psychic { background: linear-gradient(to right, rgba(248, 89, 136, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group.rock { background: linear-gradient(to right, rgba(183, 160, 56, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group.ice { background: linear-gradient(to right, rgba(151, 216, 216, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group.bug { background: linear-gradient(to right, rgba(167, 182, 32, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group.dragon { background: linear-gradient(to right, rgba(112, 58, 248, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group.ghost { background: linear-gradient(to right, rgba(112, 87, 152, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group.dark { background: linear-gradient(to right, rgba(112, 88, 72, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group.steel { background: linear-gradient(to right, rgba(185, 185, 208, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group.fairy { background: linear-gradient(to right, rgba(238, 155, 173, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group > .secondary.type-group { flex-grow: 1; padding: 0 0.4em; }
+#pkmn-selector .type-groups > .primary.type-group > .secondary.type-group.normal { background: linear-gradient(to left, rgba(167, 167, 118, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group > .secondary.type-group.fire { background: linear-gradient(to left, rgba(239, 127, 46, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group > .secondary.type-group.fighting { background: linear-gradient(to left, rgba(190, 47, 39, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group > .secondary.type-group.water { background: linear-gradient(to left, rgba(102, 143, 240, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group > .secondary.type-group.flying { background: linear-gradient(to left, rgba(167, 143, 240, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group > .secondary.type-group.grass { background: linear-gradient(to left, rgba(120, 200, 81, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group > .secondary.type-group.poison { background: linear-gradient(to left, rgba(160, 64, 160, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group > .secondary.type-group.electric { background: linear-gradient(to left, rgba(248, 208, 48, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group > .secondary.type-group.ground { background: linear-gradient(to left, rgba(224, 191, 103, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group > .secondary.type-group.psychic { background: linear-gradient(to left, rgba(248, 89, 136, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group > .secondary.type-group.rock { background: linear-gradient(to left, rgba(183, 160, 56, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group > .secondary.type-group.ice { background: linear-gradient(to left, rgba(151, 216, 216, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group > .secondary.type-group.bug { background: linear-gradient(to left, rgba(167, 182, 32, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group > .secondary.type-group.dragon { background: linear-gradient(to left, rgba(112, 58, 248, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group > .secondary.type-group.ghost { background: linear-gradient(to left, rgba(112, 87, 152, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group > .secondary.type-group.dark { background: linear-gradient(to left, rgba(112, 88, 72, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group > .secondary.type-group.steel { background: linear-gradient(to left, rgba(185, 185, 208, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .primary.type-group > .secondary.type-group.fairy { background: linear-gradient(to left, rgba(238, 155, 173, 0.9) 0%, transparent 90%); }
+#pkmn-selector .type-groups > .type-group:not(.single-type) { order: 2; }
+#pkmn-selector .type-groups > .type-group .type-group { display: flex; align-items: center; }
+#pkmn-selector .type-groups > .type-group .types-wrapper { display: flex; flex-shrink: 0; flex-grow: 1; }
+#pkmn-selector .type-grouped-pokemon { display: flex; flex-flow: row wrap; align-items: center; flex-grow: 1; justify-content: flex-end; }
+#pkmn-selector .opkmn { text-align: center; }
+#pkmn-selector .opkmn.available:not(.selected):hover { cursor: pointer; }
+#pkmn-selector .opkmn.selected { cursor: default; }
+#pkmn-selector .opkmn.selected img.small { -webkit-filter: grayscale(100%); filter: grayscale(100%); }
+
+.pkmn-list { display: inline-flex; flex-flow: column nowrap; padding: 0.5em; margin-top: 45px; }
+
+.pkmn { position: relative; cursor: default; }
+.pkmn .options { display: none; }
+.pkmn.selected .options { display: flex; align-items: center; position: absolute; left: 100%; top: 0; height: 100%; padding: 1em 0; box-sizing: border-box; }
+.pkmn.selected .options .option { padding: 0.5em; background: #262626; border: 3px solid #999999; border-left: none; border-radius: 0 1em 1em 0; white-space: nowrap; }
+.pkmn.selected .options .option:hover { cursor: pointer; }
+.pkmn + .pkmn { margin-top: 0.3em; }
+.pkmn .index { position: absolute; left: 0.5em; top: 0.3em; font-size: 1.4em; }
+.pkmn .info { padding: 0.8em; display: flex; align-items: center; }
+.pkmn .info .species { display: inline-flex; flex-flow: column; align-items: center; text-align: center; width: 12em; }
+.pkmn .info .species .image { position: relative; align-self: stretch; min-height: 80px; }
+.pkmn .info .species .image > div { position: relative; }
+.pkmn .info .species .image .self, .pkmn .info .species .image .opponent { margin: -8px 0; }
+.pkmn .info .species .image .opponent { display: none; }
+.pkmn .info .species .image .gym { position: absolute; z-index: 0; top: 0.5em; right: 3em; opacity: 0.3; top: 0; left: 0; right: 0; margin-left: auto; margin-right: auto; opacity: 0.07; width: 100px; -webkit-filter: invert(100%); filter: invert(100%); }
+.pkmn .info .species .image .self { z-index: 1; cursor: pointer; }
+.pkmn .info .species .image.attacking, .pkmn .info .species .image.defending { min-height: 100px; }
+.pkmn .info .species .image.attacking > div, .pkmn .info .species .image.defending > div { position: absolute; }
+.pkmn .info .species .image.attacking .opponent, .pkmn .info .species .image.defending .opponent { display: block; -webkit-filter: grayscale(80%); filter: grayscale(80%); }
+.pkmn .info .species .image.attacking .gym, .pkmn .info .species .image.defending .gym { margin: 0; left: auto; top: 0.5em; right: 0em; top: -0.5em; right: -0.5em; }
+.pkmn .info .species .image.attacking .opponent, .pkmn .info .species .image.defending .self { top: -0.5em; right: -0.5em; z-index: 1; }
+.pkmn .info .species .image.attacking .self, .pkmn .info .species .image.defending .opponent { bottom: -0.2em; left: -1em; z-index: 2; }
+.pkmn .info .species .name { font-size: 2em; }
+.pkmn .info .species .total-power { display: flex; align-items: center; justify-content: flex-end; align-self: stretch; padding: 0 0.5em; position: relative; z-index: 3; }
+.pkmn .info .species .total-power .total { display: flex; }
+.pkmn .info .species .total-power .max { margin-left: 0.5em; width: 100px; background: rgba(0, 0, 0, 0.2); border-radius: 4px; border: 1px solid rgba(0, 0, 0, 0.4); }
+.pkmn .info .species .total-power .bar { box-sizing: border-box; background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 4px; height: 10px; }
+.pkmn > .primary.type { border: 3px solid #262626; border-radius: 1em; overflow: hidden; }
+.pkmn > .primary.type.normal { background: linear-gradient(to top right, rgba(167, 167, 118, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type.fire { background: linear-gradient(to top right, rgba(239, 127, 46, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type.fighting { background: linear-gradient(to top right, rgba(190, 47, 39, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type.water { background: linear-gradient(to top right, rgba(102, 143, 240, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type.flying { background: linear-gradient(to top right, rgba(167, 143, 240, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type.grass { background: linear-gradient(to top right, rgba(120, 200, 81, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type.poison { background: linear-gradient(to top right, rgba(160, 64, 160, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type.electric { background: linear-gradient(to top right, rgba(248, 208, 48, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type.ground { background: linear-gradient(to top right, rgba(224, 191, 103, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type.psychic { background: linear-gradient(to top right, rgba(248, 89, 136, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type.rock { background: linear-gradient(to top right, rgba(183, 160, 56, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type.ice { background: linear-gradient(to top right, rgba(151, 216, 216, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type.bug { background: linear-gradient(to top right, rgba(167, 182, 32, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type.dragon { background: linear-gradient(to top right, rgba(112, 58, 248, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type.ghost { background: linear-gradient(to top right, rgba(112, 87, 152, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type.dark { background: linear-gradient(to top right, rgba(112, 88, 72, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type.steel { background: linear-gradient(to top right, rgba(185, 185, 208, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type.fairy { background: linear-gradient(to top right, rgba(238, 155, 173, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type > .secondary.type.normal { background: linear-gradient(to bottom left, rgba(167, 167, 118, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type > .secondary.type.fire { background: linear-gradient(to bottom left, rgba(239, 127, 46, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type > .secondary.type.fighting { background: linear-gradient(to bottom left, rgba(190, 47, 39, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type > .secondary.type.water { background: linear-gradient(to bottom left, rgba(102, 143, 240, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type > .secondary.type.flying { background: linear-gradient(to bottom left, rgba(167, 143, 240, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type > .secondary.type.grass { background: linear-gradient(to bottom left, rgba(120, 200, 81, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type > .secondary.type.poison { background: linear-gradient(to bottom left, rgba(160, 64, 160, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type > .secondary.type.electric { background: linear-gradient(to bottom left, rgba(248, 208, 48, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type > .secondary.type.ground { background: linear-gradient(to bottom left, rgba(224, 191, 103, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type > .secondary.type.psychic { background: linear-gradient(to bottom left, rgba(248, 89, 136, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type > .secondary.type.rock { background: linear-gradient(to bottom left, rgba(183, 160, 56, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type > .secondary.type.ice { background: linear-gradient(to bottom left, rgba(151, 216, 216, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type > .secondary.type.bug { background: linear-gradient(to bottom left, rgba(167, 182, 32, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type > .secondary.type.dragon { background: linear-gradient(to bottom left, rgba(112, 58, 248, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type > .secondary.type.ghost { background: linear-gradient(to bottom left, rgba(112, 87, 152, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type > .secondary.type.dark { background: linear-gradient(to bottom left, rgba(112, 88, 72, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type > .secondary.type.steel { background: linear-gradient(to bottom left, rgba(185, 185, 208, 0.9) 0%, transparent 90%); }
+.pkmn > .primary.type > .secondary.type.fairy { background: linear-gradient(to bottom left, rgba(238, 155, 173, 0.9) 0%, transparent 90%); }
+.pkmn.selected > .primary.type { border: 3px solid #d9d9d9; }
+.pkmn .movesets { display: flex; }
+.pkmn .movesets .list { display: flex; flex-flow: column nowrap; align-items: flex-start; }
+.pkmn .movesets .list.offensive .best-offensive.moveset .total { color: yellow; }
+.pkmn .movesets .list.offensive .best-offensive.badge { filter: invert(100%) !important; -webkit-filter: invert(100%) !important; }
+.pkmn .movesets .list.offensive .quick-only:not(.forced).moveset .special.move .name { color: #666666; background: #888888; text-decoration: line-through; }
+.pkmn .movesets .list.offensive .quick-only.forced.moveset .totals .total { color: orange; }
+.pkmn .movesets .list.defensive .best-defensive.moveset .total { color: yellow; }
+.pkmn .movesets .list.defensive .best-defensive.badge { filter: invert(100%) !important; -webkit-filter: invert(100%) !important; }
+.pkmn .movesets .list.by-dps .total.score { color: gray !important; }
+.pkmn .movesets .list.by-score .total.dps { color: gray !important; }
+.pkmn .movesets .list .moveset { position: relative; display: flex; justify-content: flex-end; background: rgba(0, 0, 0, 0.5); margin: 1px; border: 1px solid rgba(0, 0, 0, 0.2); border-radius: 10px; overflow: hidden; text-align: center; }
+.pkmn .movesets .list .moveset .removed { color: rgba(255, 255, 255, 0.3); }
+.pkmn .movesets .list .moveset .badges { display: flex; align-items: center; }
+.pkmn .movesets .list .moveset .badges .badge { display: none; filter: invert(60%); -webkit-filter: invert(60%); margin-right: 0.5em; }
+.pkmn .movesets .list .moveset.best-offensive .best-offensive.badge { display: inline-block; }
+.pkmn .movesets .list .moveset.best-defensive .best-defensive.badge { display: inline-block; }
+.pkmn .movesets .list .moveset .name { box-sizing: border-box; padding: 0.2em 0.5em; width: 9em; background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), transparent, rgba(0, 0, 0, 0.1)); }
+.pkmn .movesets .list .moveset .quick.move .type.normal { background: rgba(167, 167, 118, 0.7); }
+.pkmn .movesets .list .moveset .quick.move .type.fire { background: rgba(239, 127, 46, 0.7); }
+.pkmn .movesets .list .moveset .quick.move .type.fighting { background: rgba(190, 47, 39, 0.7); }
+.pkmn .movesets .list .moveset .quick.move .type.water { background: rgba(102, 143, 240, 0.7); }
+.pkmn .movesets .list .moveset .quick.move .type.flying { background: rgba(167, 143, 240, 0.7); }
+.pkmn .movesets .list .moveset .quick.move .type.grass { background: rgba(120, 200, 81, 0.7); }
+.pkmn .movesets .list .moveset .quick.move .type.poison { background: rgba(160, 64, 160, 0.7); }
+.pkmn .movesets .list .moveset .quick.move .type.electric { background: rgba(248, 208, 48, 0.7); }
+.pkmn .movesets .list .moveset .quick.move .type.ground { background: rgba(224, 191, 103, 0.7); }
+.pkmn .movesets .list .moveset .quick.move .type.psychic { background: rgba(248, 89, 136, 0.7); }
+.pkmn .movesets .list .moveset .quick.move .type.rock { background: rgba(183, 160, 56, 0.7); }
+.pkmn .movesets .list .moveset .quick.move .type.ice { background: rgba(151, 216, 216, 0.7); }
+.pkmn .movesets .list .moveset .quick.move .type.bug { background: rgba(167, 182, 32, 0.7); }
+.pkmn .movesets .list .moveset .quick.move .type.dragon { background: rgba(112, 58, 248, 0.7); }
+.pkmn .movesets .list .moveset .quick.move .type.ghost { background: rgba(112, 87, 152, 0.7); }
+.pkmn .movesets .list .moveset .quick.move .type.dark { background: rgba(112, 88, 72, 0.7); }
+.pkmn .movesets .list .moveset .quick.move .type.steel { background: rgba(185, 185, 208, 0.7); }
+.pkmn .movesets .list .moveset .quick.move .type.fairy { background: rgba(238, 155, 173, 0.7); }
+.pkmn .movesets .list .moveset .special.move { margin-left: 1px; }
+.pkmn .movesets .list .moveset .special.move .type.normal { background: rgba(167, 167, 118, 0.7); }
+.pkmn .movesets .list .moveset .special.move .type.fire { background: rgba(239, 127, 46, 0.7); }
+.pkmn .movesets .list .moveset .special.move .type.fighting { background: rgba(190, 47, 39, 0.7); }
+.pkmn .movesets .list .moveset .special.move .type.water { background: rgba(102, 143, 240, 0.7); }
+.pkmn .movesets .list .moveset .special.move .type.flying { background: rgba(167, 143, 240, 0.7); }
+.pkmn .movesets .list .moveset .special.move .type.grass { background: rgba(120, 200, 81, 0.7); }
+.pkmn .movesets .list .moveset .special.move .type.poison { background: rgba(160, 64, 160, 0.7); }
+.pkmn .movesets .list .moveset .special.move .type.electric { background: rgba(248, 208, 48, 0.7); }
+.pkmn .movesets .list .moveset .special.move .type.ground { background: rgba(224, 191, 103, 0.7); }
+.pkmn .movesets .list .moveset .special.move .type.psychic { background: rgba(248, 89, 136, 0.7); }
+.pkmn .movesets .list .moveset .special.move .type.rock { background: rgba(183, 160, 56, 0.7); }
+.pkmn .movesets .list .moveset .special.move .type.ice { background: rgba(151, 216, 216, 0.7); }
+.pkmn .movesets .list .moveset .special.move .type.bug { background: rgba(167, 182, 32, 0.7); }
+.pkmn .movesets .list .moveset .special.move .type.dragon { background: rgba(112, 58, 248, 0.7); }
+.pkmn .movesets .list .moveset .special.move .type.ghost { background: rgba(112, 87, 152, 0.7); }
+.pkmn .movesets .list .moveset .special.move .type.dark { background: rgba(112, 88, 72, 0.7); }
+.pkmn .movesets .list .moveset .special.move .type.steel { background: rgba(185, 185, 208, 0.7); }
+.pkmn .movesets .list .moveset .special.move .type.fairy { background: rgba(238, 155, 173, 0.7); }
+.pkmn .movesets .list .moveset .move:hover .type.normal { background: rgba(167, 167, 118, 0.9); }
+.pkmn .movesets .list .moveset .move:hover .type.fire { background: rgba(239, 127, 46, 0.9); }
+.pkmn .movesets .list .moveset .move:hover .type.fighting { background: rgba(190, 47, 39, 0.9); }
+.pkmn .movesets .list .moveset .move:hover .type.water { background: rgba(102, 143, 240, 0.9); }
+.pkmn .movesets .list .moveset .move:hover .type.flying { background: rgba(167, 143, 240, 0.9); }
+.pkmn .movesets .list .moveset .move:hover .type.grass { background: rgba(120, 200, 81, 0.9); }
+.pkmn .movesets .list .moveset .move:hover .type.poison { background: rgba(160, 64, 160, 0.9); }
+.pkmn .movesets .list .moveset .move:hover .type.electric { background: rgba(248, 208, 48, 0.9); }
+.pkmn .movesets .list .moveset .move:hover .type.ground { background: rgba(224, 191, 103, 0.9); }
+.pkmn .movesets .list .moveset .move:hover .type.psychic { background: rgba(248, 89, 136, 0.9); }
+.pkmn .movesets .list .moveset .move:hover .type.rock { background: rgba(183, 160, 56, 0.9); }
+.pkmn .movesets .list .moveset .move:hover .type.ice { background: rgba(151, 216, 216, 0.9); }
+.pkmn .movesets .list .moveset .move:hover .type.bug { background: rgba(167, 182, 32, 0.9); }
+.pkmn .movesets .list .moveset .move:hover .type.dragon { background: rgba(112, 58, 248, 0.9); }
+.pkmn .movesets .list .moveset .move:hover .type.ghost { background: rgba(112, 87, 152, 0.9); }
+.pkmn .movesets .list .moveset .move:hover .type.dark { background: rgba(112, 88, 72, 0.9); }
+.pkmn .movesets .list .moveset .move:hover .type.steel { background: rgba(185, 185, 208, 0.9); }
+.pkmn .movesets .list .moveset .move:hover .type.fairy { background: rgba(238, 155, 173, 0.9); }
+.pkmn .movesets .list .moveset .totals { display: flex; align-items: center; padding: 0.2em 0.5em 0.2em 0.2em; }
+.pkmn .movesets .list .moveset .totals .total { display: flex; justify-content: flex-end; width: 3.3em; }
+.pkmn .movesets .list .moveset .totals .max { margin-left: 0.5em; width: 100px; background: rgba(0, 0, 0, 0.2); border-radius: 4px; border: 1px solid rgba(0, 0, 0, 0.4); }
+.pkmn .movesets .list .moveset .totals .max + .total { width: 3.9em; }
+.pkmn .movesets .list .moveset .totals .bar { box-sizing: border-box; background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 4px; height: 10px; transition: width 1s ease-out; }
+.pkmn .movesets .special.move:hover .type.normal, .pkmn .movesets .quick.move:hover .type.normal { background: #a7a776; }
+.pkmn .movesets .special.move:hover .type.fire, .pkmn .movesets .quick.move:hover .type.fire { background: #ef7f2e; }
+.pkmn .movesets .special.move:hover .type.fighting, .pkmn .movesets .quick.move:hover .type.fighting { background: #be2f27; }
+.pkmn .movesets .special.move:hover .type.water, .pkmn .movesets .quick.move:hover .type.water { background: #668ff0; }
+.pkmn .movesets .special.move:hover .type.flying, .pkmn .movesets .quick.move:hover .type.flying { background: #a78ff0; }
+.pkmn .movesets .special.move:hover .type.grass, .pkmn .movesets .quick.move:hover .type.grass { background: #78c851; }
+.pkmn .movesets .special.move:hover .type.poison, .pkmn .movesets .quick.move:hover .type.poison { background: #a040a0; }
+.pkmn .movesets .special.move:hover .type.electric, .pkmn .movesets .quick.move:hover .type.electric { background: #f8d030; }
+.pkmn .movesets .special.move:hover .type.ground, .pkmn .movesets .quick.move:hover .type.ground { background: #e0bf67; }
+.pkmn .movesets .special.move:hover .type.psychic, .pkmn .movesets .quick.move:hover .type.psychic { background: #f85988; }
+.pkmn .movesets .special.move:hover .type.rock, .pkmn .movesets .quick.move:hover .type.rock { background: #b7a038; }
+.pkmn .movesets .special.move:hover .type.ice, .pkmn .movesets .quick.move:hover .type.ice { background: #97d8d8; }
+.pkmn .movesets .special.move:hover .type.bug, .pkmn .movesets .quick.move:hover .type.bug { background: #a7b620; }
+.pkmn .movesets .special.move:hover .type.dragon, .pkmn .movesets .quick.move:hover .type.dragon { background: #703af8; }
+.pkmn .movesets .special.move:hover .type.ghost, .pkmn .movesets .quick.move:hover .type.ghost { background: #705798; }
+.pkmn .movesets .special.move:hover .type.dark, .pkmn .movesets .quick.move:hover .type.dark { background: #705848; }
+.pkmn .movesets .special.move:hover .type.steel, .pkmn .movesets .quick.move:hover .type.steel { background: #b9b9d0; }
+.pkmn .movesets .special.move:hover .type.fairy, .pkmn .movesets .quick.move:hover .type.fairy { background: #ee9bad; }
+.pkmn .movesets .special.move .type.normal { background: linear-gradient(to bottom, #a7a776 0%, transparent 100%); }
+.pkmn .movesets .special.move .type.fire { background: linear-gradient(to bottom, #ef7f2e 0%, transparent 100%); }
+.pkmn .movesets .special.move .type.fighting { background: linear-gradient(to bottom, #be2f27 0%, transparent 100%); }
+.pkmn .movesets .special.move .type.water { background: linear-gradient(to bottom, #668ff0 0%, transparent 100%); }
+.pkmn .movesets .special.move .type.flying { background: linear-gradient(to bottom, #a78ff0 0%, transparent 100%); }
+.pkmn .movesets .special.move .type.grass { background: linear-gradient(to bottom, #78c851 0%, transparent 100%); }
+.pkmn .movesets .special.move .type.poison { background: linear-gradient(to bottom, #a040a0 0%, transparent 100%); }
+.pkmn .movesets .special.move .type.electric { background: linear-gradient(to bottom, #f8d030 0%, transparent 100%); }
+.pkmn .movesets .special.move .type.ground { background: linear-gradient(to bottom, #e0bf67 0%, transparent 100%); }
+.pkmn .movesets .special.move .type.psychic { background: linear-gradient(to bottom, #f85988 0%, transparent 100%); }
+.pkmn .movesets .special.move .type.rock { background: linear-gradient(to bottom, #b7a038 0%, transparent 100%); }
+.pkmn .movesets .special.move .type.ice { background: linear-gradient(to bottom, #97d8d8 0%, transparent 100%); }
+.pkmn .movesets .special.move .type.bug { background: linear-gradient(to bottom, #a7b620 0%, transparent 100%); }
+.pkmn .movesets .special.move .type.dragon { background: linear-gradient(to bottom, #703af8 0%, transparent 100%); }
+.pkmn .movesets .special.move .type.ghost { background: linear-gradient(to bottom, #705798 0%, transparent 100%); }
+.pkmn .movesets .special.move .type.dark { background: linear-gradient(to bottom, #705848 0%, transparent 100%); }
+.pkmn .movesets .special.move .type.steel { background: linear-gradient(to bottom, #b9b9d0 0%, transparent 100%); }
+.pkmn .movesets .special.move .type.fairy { background: linear-gradient(to bottom, #ee9bad 0%, transparent 100%); }
+.pkmn .movesets .special.move .energy { display: flex; justify-content: center; opacity: 0.3; }
+.pkmn .movesets .special.move .energy .slot { flex-grow: 1; height: 6px; background: rgba(255, 255, 255, 0.3); border: 2px solid white; border-radius: 4px; margin: 1px; }
+.pkmn .movesets .special.move:hover .energy { opacity: 1; }
+.pkmn .movesets .special.move:hover .energy .slot { background: linear-gradient(to bottom, #3da2fd, #4ec9fc, #55dafb); border-color: #afdaff; }
+.pkmn .movesets .quick.move .type.normal { background: linear-gradient(to right, rgba(167, 167, 118, 0.9) 0%, transparent 90%); }
+.pkmn .movesets .quick.move .type.fire { background: linear-gradient(to right, rgba(239, 127, 46, 0.9) 0%, transparent 90%); }
+.pkmn .movesets .quick.move .type.fighting { background: linear-gradient(to right, rgba(190, 47, 39, 0.9) 0%, transparent 90%); }
+.pkmn .movesets .quick.move .type.water { background: linear-gradient(to right, rgba(102, 143, 240, 0.9) 0%, transparent 90%); }
+.pkmn .movesets .quick.move .type.flying { background: linear-gradient(to right, rgba(167, 143, 240, 0.9) 0%, transparent 90%); }
+.pkmn .movesets .quick.move .type.grass { background: linear-gradient(to right, rgba(120, 200, 81, 0.9) 0%, transparent 90%); }
+.pkmn .movesets .quick.move .type.poison { background: linear-gradient(to right, rgba(160, 64, 160, 0.9) 0%, transparent 90%); }
+.pkmn .movesets .quick.move .type.electric { background: linear-gradient(to right, rgba(248, 208, 48, 0.9) 0%, transparent 90%); }
+.pkmn .movesets .quick.move .type.ground { background: linear-gradient(to right, rgba(224, 191, 103, 0.9) 0%, transparent 90%); }
+.pkmn .movesets .quick.move .type.psychic { background: linear-gradient(to right, rgba(248, 89, 136, 0.9) 0%, transparent 90%); }
+.pkmn .movesets .quick.move .type.rock { background: linear-gradient(to right, rgba(183, 160, 56, 0.9) 0%, transparent 90%); }
+.pkmn .movesets .quick.move .type.ice { background: linear-gradient(to right, rgba(151, 216, 216, 0.9) 0%, transparent 90%); }
+.pkmn .movesets .quick.move .type.bug { background: linear-gradient(to right, rgba(167, 182, 32, 0.9) 0%, transparent 90%); }
+.pkmn .movesets .quick.move .type.dragon { background: linear-gradient(to right, rgba(112, 58, 248, 0.9) 0%, transparent 90%); }
+.pkmn .movesets .quick.move .type.ghost { background: linear-gradient(to right, rgba(112, 87, 152, 0.9) 0%, transparent 90%); }
+.pkmn .movesets .quick.move .type.dark { background: linear-gradient(to right, rgba(112, 88, 72, 0.9) 0%, transparent 90%); }
+.pkmn .movesets .quick.move .type.steel { background: linear-gradient(to right, rgba(185, 185, 208, 0.9) 0%, transparent 90%); }
+.pkmn .movesets .quick.move .type.fairy { background: linear-gradient(to right, rgba(238, 155, 173, 0.9) 0%, transparent 90%); }
+
+@media only screen and (max-width: 1024px) { body { overflow-x: auto; }
+  #app { width: 100%; box-sizing: border-box; }
+  #app main { margin: 6em 0 0; min-width: initial; align-items: center; }
+  #app main header { position: fixed; background: black; top: 3em; left: 0; z-index: 6; width: 100%; box-sizing: border-box; min-width: 320px; margin: 0; padding: 0 1em 0.5em; height: 3em; align-items: center; }
+  #app main header #filters { display: none; }
+  #app main header #filters .filter img { width: 24px; height: 24px; }
+  #app main header #opponent { display: none; }
+  #app main header #opponent .vs { font-size: 1em; }
+  #app main header #opponent .species img { margin: -10px 0; }
+  #app main header #sorters .sorter + .sorter { margin-left: 0.5em; }
+  #app main header #sorters .sorter img { width: 32px; height: 32px; }
+  #logo { position: fixed; background: black; top: 0; left: 0; z-index: 5; width: 100%; margin: 0; padding: 0 0.5em; height: 1.5em; }
+  #pkmn-selector { order: -1; position: relative; margin: 0; top: 0; left: 0; z-index: 5; box-sizing: border-box; width: 100%; align-items: center; }
+  #pkmn-selector .types { display: none; }
+  #pkmn-selector .type-groups { display: none; }
+  .pkmn-list { margin-top: 0; }
+  .pkmn-list .pkmn .options { display: none; } }
+@media only screen and (max-width: 800px) { #app { min-width: 320px; }
+  #app main { width: 100%; box-sizing: border-box; }
+  #app .pkmn-list .pkmn:not(.selected) .total-power { display: none; }
+  #app .pkmn-list .pkmn:not(.selected) .movesets { display: none; }
+  #app .pkmn-list .pkmn .info { flex-flow: column nowrap; }
+  #app .pkmn-list .pkmn .info .species { margin-bottom: 0.5em; }
+  #app .pkmn-list .pkmn .info .movesets .list { align-items: stretch; }
+  #app .pkmn-list .pkmn .info .moveset { flex-flow: row wrap; }
+  #app .pkmn-list .pkmn .info .moveset .move { flex-basis: 0; flex-grow: 1; }
+  #app .pkmn-list .pkmn .info .moveset .move .name { width: auto; }
+  #app .pkmn-list .pkmn .info .moveset .totals { flex-basis: 80%; flex-grow: 1; justify-content: center; padding-right: 0.2em; }
+  #app .pkmn-list .pkmn .info .moveset .badges { width: 3em; }
+  #app .pkmn-list .pkmn .info .moveset .badges .badge { margin-right: 0.2em; } }
+
+/*# sourceMappingURL=style.css.map */
