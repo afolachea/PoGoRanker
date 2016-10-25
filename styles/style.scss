@@ -150,6 +150,38 @@ body {
 	}
 }
 
+%message {
+	background: black;
+	padding: 1em;
+	border: 3px solid hsl(0, 0%, 15%);
+	border-radius: 1em;
+	box-shadow: -5px 5px 10px hsla(0, 0%, 0%, 0.5);
+}
+
+#sorry {
+	position: fixed;
+	margin: auto;
+	top: 50%;
+	left: 50%;
+	width: 300px;
+	margin-left: -150px;
+	margin-top: -100px;
+	z-index: 8;
+	box-sizing: border-box;
+	
+	.close {
+		position: absolute;
+		top: 5px;
+		right: 10px;
+		font-size: 1.5em;
+		@extend %option;
+	}
+
+	@extend %message;
+
+	display: none;
+}
+
 #donate {
 	position: fixed;
 	top: 0.3em;
@@ -162,10 +194,7 @@ body {
 	}
 
 	.message {
-		background: black;
-		padding: 1em;
-		border: 3px solid hsl(0, 0%, 15%);
-		border-radius: 1em;
+		@extend %message;
 
 		ul {
 			list-style: none;
@@ -999,6 +1028,10 @@ body {
 @media only screen and (max-width: 1024px) {
 	body {
 		overflow-x: auto;
+	}
+
+	#sorry {
+		display: block;
 	}
 
 	#app {

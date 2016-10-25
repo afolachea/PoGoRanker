@@ -36,6 +36,12 @@
         <details id="popup" ng-click="$event.stopPropagation()" ng-show="selected.info">
             {{selected.info}}
         </details>
+        <div id="sorry" ng-show="sorry">
+            <div class="close" ng-click="sorry = false">X</div>
+            <h2>Sorry :(</h2>
+            <p>I'm still working on the mobile version.</p>
+            <p>Meanwhile, I recommend you to try this on desktop for a better experience.</p>
+        </div>
         <aside>
         </aside>
         <main>

@@ -17,9 +17,13 @@ body .header-back { position: fixed; top: 0; left: 0; background: black; z-index
 #loading-screen #pokeball #top { border-color: rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0.5) transparent transparent; transform: rotate(-45deg); -webkit-clip-path: polygon(10% 0, 100% 0, 100% 90%); clip-path: polygon(10% 0, 100% 0, 100% 90%); }
 #loading-screen #pokeball #bottom { border-color: transparent white white transparent; transform: rotate(45deg); -webkit-clip-path: polygon(100% 10%, 100% 100%, 10% 100%); clip-path: polygon(100% 10%, 100% 100%, 10% 100%); }
 
+#sorry, #donate .message { background: black; padding: 1em; border: 3px solid #262626; border-radius: 1em; box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.5); }
+
+#sorry { position: fixed; margin: auto; top: 50%; left: 50%; width: 300px; margin-left: -150px; margin-top: -100px; z-index: 8; box-sizing: border-box; display: none; }
+#sorry .close { position: absolute; top: 5px; right: 10px; font-size: 1.5em; }
+
 #donate { position: fixed; top: 0.3em; right: 0.7em; z-index: 7; }
 #donate .icon { font-size: 1.5em; }
-#donate .message { background: black; padding: 1em; border: 3px solid #262626; border-radius: 1em; }
 #donate .message ul { list-style: none; }
 #donate .message ul li * { vertical-align: middle; }
 #donate .message form { text-align: center; }
@@ -38,12 +42,12 @@ body .header-back { position: fixed; top: 0; left: 0; background: black; z-index
 
 #popup { position: fixed; z-index: 2; top: 1em; right: 1em; background: gray; border: 5px solid lightgray; box-shadow: -2px 2px 5px 2px black; max-width: 90%; overflow: hidden; }
 
-#donate .icon, .go-top, #filters .filter .toggle, #sorters .sorter, #opponent .selected .moveset .options .moveset { cursor: pointer; opacity: 0.6; }
-#donate .icon + .sorter, .go-top + .sorter, #filters .filter .toggle + .sorter, #sorters .sorter + .sorter, #opponent .selected .moveset .options .moveset + .sorter { margin-left: 1em; }
-#donate .icon:hover, .go-top:hover, #filters .filter .toggle:hover, #sorters .sorter:hover, #opponent .selected .moveset .options .moveset:hover { opacity: 0.8; }
-#donate .selected.icon, .selected.go-top, #filters .filter .selected.toggle, #sorters .selected.sorter, #opponent .selected .moveset .options .selected.moveset { opacity: 0.9; }
-#donate .icon:hover.selected, .go-top:hover.selected, #filters .filter .toggle:hover.selected, #sorters .sorter:hover.selected, #opponent .selected .moveset .options .moveset:hover.selected { opacity: 1; }
-#donate .icon img, .go-top img, #filters .filter .toggle img, #sorters .sorter img, #opponent .selected .moveset .options .moveset img { filter: invert(100%) !important; -webkit-filter: invert(100%) !important; }
+#sorry .close, #donate .icon, .go-top, #filters .filter .toggle, #sorters .sorter, #opponent .selected .moveset .options .moveset { cursor: pointer; opacity: 0.6; }
+#sorry .close + .sorter, #donate .icon + .sorter, .go-top + .sorter, #filters .filter .toggle + .sorter, #sorters .sorter + .sorter, #opponent .selected .moveset .options .moveset + .sorter { margin-left: 1em; }
+#sorry .close:hover, #donate .icon:hover, .go-top:hover, #filters .filter .toggle:hover, #sorters .sorter:hover, #opponent .selected .moveset .options .moveset:hover { opacity: 0.8; }
+#sorry .selected.close, #donate .selected.icon, .selected.go-top, #filters .filter .selected.toggle, #sorters .selected.sorter, #opponent .selected .moveset .options .selected.moveset { opacity: 0.9; }
+#sorry .close:hover.selected, #donate .icon:hover.selected, .go-top:hover.selected, #filters .filter .toggle:hover.selected, #sorters .sorter:hover.selected, #opponent .selected .moveset .options .moveset:hover.selected { opacity: 1; }
+#sorry .close img, #donate .icon img, .go-top img, #filters .filter .toggle img, #sorters .sorter img, #opponent .selected .moveset .options .moveset img { filter: invert(100%) !important; -webkit-filter: invert(100%) !important; }
 
 #filters .filter .types, #pkmn-selector .type-groups > .type-group .types, .pkmn .info .species .types { display: flex; background: rgba(0, 0, 0, 0.4); border: 1px solid transparent; border-radius: 0.4em; overflow: hidden; }
 #filters .filter .types .type, #pkmn-selector .type-groups > .type-group .types .type, .pkmn .info .species .types .type { padding: 0em 0.3em; display: inline-block; text-transform: uppercase; box-sizing: border-box; text-align: center; }
@@ -397,6 +401,7 @@ body .header-back { position: fixed; top: 0; left: 0; background: black; z-index
 .pkmn .movesets .quick.move .type.fairy { background: linear-gradient(to right, rgba(238, 155, 173, 0.9) 0%, transparent 90%); }
 
 @media only screen and (max-width: 1024px) { body { overflow-x: auto; }
+  #sorry { display: block; }
   #app { width: 100%; box-sizing: border-box; }
   #app main { margin: 6em 0 0; min-width: initial; align-items: center; }
   #app main header { position: fixed; background: black; top: 3em; left: 0; z-index: 6; width: 100%; box-sizing: border-box; min-width: 320px; margin: 0; padding: 0 1em 0.5em; height: 3em; align-items: center; }

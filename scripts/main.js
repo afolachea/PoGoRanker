@@ -21,6 +21,7 @@ app.controller('MainController', function($scope, $timeout, $anchorScroll, $filt
     var unavailable = {'Mewtwo':0,'Mew':0,'Articuno':0,'Moltres':0,'Zapdos':0,'Ditto':0};
 
     $scope.donate = false;
+    $scope.sorry = true;
     $scope.showOpponentMovesets = false;
 
     $scope.typeFilters = {};
