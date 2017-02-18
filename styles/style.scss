@@ -638,6 +638,8 @@ body {
 .pkmn {
 	position: relative;
 	cursor: default;
+	
+	margin-bottom: 0.3em;
 
 	.options {
 		display: none;
@@ -666,10 +668,6 @@ body {
 				}
 			}
 		}
-	}
-	
-	& + .pkmn {
-		margin-top: 0.3em;
 	}
 
 	.index {

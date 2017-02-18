@@ -200,12 +200,11 @@ body .header-back { position: fixed; top: 0; left: 0; background: black; z-index
 
 .pkmn-list { display: inline-flex; flex-flow: column nowrap; padding: 0.5em; margin-top: 45px; }
 
-.pkmn { position: relative; cursor: default; }
+.pkmn { position: relative; cursor: default; margin-bottom: 0.3em; }
 .pkmn .options { display: none; }
 .pkmn.selected .options { display: flex; align-items: center; position: absolute; left: 100%; top: 0; height: 100%; padding: 1em 0; box-sizing: border-box; }
 .pkmn.selected .options .option { padding: 0.5em; background: #262626; border: 3px solid #999999; border-left: none; border-radius: 0 1em 1em 0; white-space: nowrap; }
 .pkmn.selected .options .option:hover { cursor: pointer; }
-.pkmn + .pkmn { margin-top: 0.3em; }
 .pkmn .index { position: absolute; left: 0.5em; top: 0.3em; font-size: 1.4em; }
 .pkmn .info { padding: 0.8em; display: flex; align-items: center; }
 .pkmn .info .species { display: inline-flex; flex-flow: column; align-items: center; text-align: center; width: 12em; }

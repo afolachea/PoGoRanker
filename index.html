@@ -162,9 +162,11 @@
             </aside>
             <div class="pkmn-list" ng-init="updatePokemonList()">
                 <div class="pkmn" data-name="{{pkmn.name}}"
-                    ng-class="{selected: selected.pokemon == pkmn}"
-                    ng-repeat="pkmn in pokemonList">
-                    <div class="index">{{selected.sorter == sorters[0] ? '#'+pkmn.num : $index+1+'\u00BA'}}</div>
+                    ng-class="{selected: selected.pokemon == pkmn, }"
+                    ng-style="{'order': pkmn.position}"
+                    ng-show="pkmn.display"
+                    ng-repeat="pkmn in preFilteredPokemonList">
+                    <div class="index">{{selected.sorter == sorters[0] ? '#'+pkmn.num : pkmn.position+1+'\u00BA'}}</div>
                     <div class="primary type" ng-class="pkmn.primaryType | lowercase">
                         <div class="secondary type" ng-class="pkmn.secondaryType || pkmn.primaryType | lowercase">
                             <div class="info">

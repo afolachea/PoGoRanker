@@ -85,6 +85,8 @@ app.controller('MainController', function($scope, $timeout, $anchorScroll, $filt
     }
 
     for (var pkmn of pokemonList) {
+        pkmn.display = false;
+        pkmn.position = 0;
         pkmn.num = ('00'+pkmn.number).slice(-3);
         pkmn.movesetsList = [];
         pkmn.maxDPS = {
@@ -160,7 +162,7 @@ app.controller('MainController', function($scope, $timeout, $anchorScroll, $filt
 
     var preFilteredPokemonList = pokemonList.filter(availabilityFilter).filter(fullEvolvedFilter);
 
-    $scope.pokemonList = preFilteredPokemonList;
+    $scope.preFilteredPokemonList = preFilteredPokemonList;
 
     calculatePokemonRanking();
     
@@ -398,10 +400,20 @@ app.controller('MainController', function($scope, $timeout, $anchorScroll, $filt
 
 
     function updatePokemonList() {
-        $scope.pokemonList = $filter('orderBy')(
+        var newPokemonRanking = $filter('orderBy')(
             $filter('filter')(preFilteredPokemonList, activeFilters),
             $scope.selected.sorter.function,
             $scope.sorters.indexOf($scope.selected.sorter));
+
+        pokemonList.forEach((p, i) => {
+            p.display = false;
+            p.position = 1000;
+        });
+
+        newPokemonRanking.forEach((p, i) => {
+            pokemon[p.name].display = true;
+            pokemon[p.name].position = i;
+        });
     };
     $scope.updatePokemonList = updatePokemonList;
 
@@ -606,7 +618,7 @@ app.controller('MainController', function($scope, $timeout, $anchorScroll, $filt
     $scope.areTypesSelected = areTypesSelected;
 
     function selectPokemon(pkmn) {
-        if (!$scope.pokemonList.some(p => p == pkmn)) selectTypes($scope.selected.types);
+        if (!pkmn.display) selectTypes($scope.selected.types);
         $scope.selected.pokemon = $scope.selected.pokemon == pkmn ? null : pkmn;
     }
     $scope.selectPokemon = selectPokemon;
