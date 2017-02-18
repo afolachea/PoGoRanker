@@ -1,3 +1,5 @@
+* { -webkit-tap-highlight-color: transparent; }
+
 html { height: 100%; }
 
 body { background: url("../images/background-ditto.png"); background-size: 550px 500px; margin: 0; padding: 0; display: flex; min-height: 100%; overflow-x: hidden; }
@@ -31,7 +33,7 @@ body .header-back { position: fixed; top: 0; left: 0; background: black; z-index
 .go-top { cursor: pointer; }
 .go-top:after { content: '\2912'; content: '\2b89'; content: '\21f1'; padding: 0 0.5em; }
 
-#app { margin: 0; padding: 0 1em 1em; color: white; font-family: Consolas, "Lucida Console", monospace; font-size: 13px; cursor: default; flex-grow: 1; display: flex; flex-flow: row wrap; justify-content: space-between; }
+#app { margin: 0; padding: 0 1em 1em; color: white; font-family: Consolas, "Lucida Console", monospace; font-size: 13px; cursor: default; flex-grow: 1; display: flex; flex-flow: row wrap; justify-content: space-between; user-select: none; -moz-user-select: none; -ms-user-select: none; -webkit-user-select: none; }
 #app[loading] #loading-screen { visibility: visible; opacity: 1; transition: visibility 0s, opacity 1s linear; }
 #app[loading] > * { visibility: hidden; transition: visibility 1s; }
 #app main { display: flex; flex-flow: column nowrap; position: relative; margin: 0 16em; min-width: 670px; }
