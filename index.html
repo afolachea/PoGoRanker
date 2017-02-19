@@ -37,14 +37,19 @@
     <div class="smokescreen"></div>
     <div id="app" ng-app="myApp" ng-controller="MainController" ng-click="select(null, $event)" loading>
         <div id="loading-screen">
-            <div id="pokeball">
-                <div id="center">
-                </div>
-                <div class="half" id="top">
-                    </div>
-                <div class="half" id="bottom">
-                    </div>
-            </div>
+            <svg id="pokeball" width="250" height="250">
+                <defs>
+                    <clipPath id="top">
+                        <rect x="0" y="0" width="250" height="115" />
+                    </clipPath>
+                    <clipPath id="bottom">
+                        <rect x="0" y="135" width="250" height="115" />
+                    </clipPath>
+                    </defs>
+                <circle cx="125" cy="125" r="65" stroke="gray" fill="transparent" stroke-width="60" clip-path="url(#top)"/>
+                <circle cx="125" cy="125" r="65" stroke="white" fill="transparent" stroke-width="60" clip-path="url(#bottom)"/>
+                <circle cx="125" cy="125" r="20" fill="white"/>
+            </svg> 
         </div>
         <details id="popup" ng-click="$event.stopPropagation()" ng-show="selected.info">
             {{selected.info}}

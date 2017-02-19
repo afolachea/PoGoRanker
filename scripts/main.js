@@ -719,7 +719,7 @@ app.directive('loading', ['$timeout', function($timeout) {
         restrict: "A",
         link: function($scope, $element, $attributes) {
             window.onbeforeunload = function(){
-                $element.attr('loading', null);
+                $element.attr('loading', 'loading');
             }
             $timeout(function(){
                 $element.removeAttr('loading');

@@ -10,12 +10,7 @@ body .header-back { position: fixed; top: 0; left: 0; background: black; z-index
   50% { transform: rotate(180deg); }
   100% { transform: rotate(360deg); } }
 #loading-screen { display: flex; justify-content: center; align-items: center; position: fixed; overflow: hidden; width: 100%; height: 100%; top: 0; left: 0; z-index: 10; background-color: black; opacity: 0; visibility: hidden; transition: visibility 1s, opacity 1s linear; }
-#loading-screen #pokeball { position: relative; height: 250px; width: 250px; border-radius: 50%; border: 25px solid rgba(255, 255, 255, 0.5); animation-name: spin; animation-duration: 1.5s; animation-timing-function: ease-in-out; animation-iteration-count: infinite; }
-#loading-screen #pokeball * { box-sizing: border-box; position: absolute; }
-#loading-screen #pokeball #center { height: 20%; width: 20%; margin: 40%; background-color: white; border-radius: 50%; }
-#loading-screen #pokeball .half { height: 80%; width: 80%; margin: 10%; border-radius: 50%; border: 50px solid; }
-#loading-screen #pokeball #top { border-color: rgba(255, 255, 255, 0.5); -webkit-clip-path: polygon(0 0, 100% 0%, 100% 44%, 0 44%); clip-path: polygon(0 0, 100% 0%, 100% 44%, 0 44%); }
-#loading-screen #pokeball #bottom { border-color: white; -webkit-clip-path: polygon(0 56%, 100% 56%, 100% 100%, 0 100%); clip-path: polygon(0 56%, 100% 56%, 100% 100%, 0 100%); }
+#loading-screen #pokeball { border-radius: 50%; animation-name: spin; animation-duration: 1.5s; animation-timing-function: ease-in-out; animation-iteration-count: infinite; }
 
 #sorry, #donate .message { background: black; padding: 1em; border: 3px solid #262626; border-radius: 1em; box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.5); }
 
