@@ -172,7 +172,7 @@
                     ng-style="{'order': pkmn.position}"
                     ng-show="pkmn.display"
                     ng-repeat="pkmn in preFilteredPokemonList">
-                    <div class="index">{{selected.sorter == sorters[0] ? '#'+pkmn.num : pkmn.position+1+'\u00BA'}}</div>
+                    <div class="index">{{getRankIndex(pkmn) || 0}}</div>
                     <div class="primary type" ng-class="pkmn.primaryType | lowercase">
                         <div class="secondary type" ng-class="pkmn.secondaryType || pkmn.primaryType | lowercase">
                             <div class="info">

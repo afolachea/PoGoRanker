@@ -367,6 +367,11 @@ app.controller('MainController', function($scope, $timeout, $anchorScroll, $filt
     };
     $scope.getBarTitle = getBarTitle;
 
+    function getRankIndex(pkmn) {
+        return $scope.selected.sorter == $scope.sorters[0] ? '#'+pkmn.num : pkmn.position+1+'\u00BA'
+    };
+    $scope.getRankIndex = getRankIndex;
+
 
 
 
@@ -669,7 +674,6 @@ app.controller('MainController', function($scope, $timeout, $anchorScroll, $filt
     $scope.log = (data) => {
         console.log(data);
     }
-
 
     $scope.select = (data, $event) => {
         $scope.selected.info = data;
